@@ -1,0 +1,524 @@
+﻿
+=GITHUB GITLAB=
+github: VicM0407 5..1_GitHub_mvn16:23 12/25/2023
+https://losst.pro/ustanovka-gitlab-v-ubuntu-18-04
+https://losst.pro/kak-polzovatsya-gitlab
+https://losst.pro/kak-polzovatsya-git-dlya-nachinayushhih
+https://ru.wikipedia.org/wiki/Git
+Наборы Патчей Патчи - различия между файлами (книга про GIT) 
++проет из "не работант smb"
+
+Команда git https://losst.pro/kak-polzovatsya-git-dlya-nachinayushhih
+$ git опции команда аргументы
+опции:
+-C - использовать указанную папку репозитория вместо текущей папки;
+-c параметр=значение - использовать указанное значение параметра конфигурации;
+-p - прокручивать весь вывод с помощью less;
+команды git:
+add - добавить файл или папку в репозиторий git;
+am - применить все патчи из email;
+archive - создать архив файлов;
+bisect - использовать бинарный поиск для поиска нужного коммита;
+branch - управление ветками проекта;
+bundle - перемещение объектов и ссылок в архиве;
+checkout - переключение между ветками;
+cherry-pick - внести изменения в уже существующие коммиты;
+clean - удалить все неотслеживаемые файлы и папки проекта;
+clone - создать копию удаленного репозитория в папку;
+commit - сохранить изменения в репозиторий;   Я:"commit"="фиксация"
+diff - посмотреть изменения между коммитами;
+fetch - скачать удаленный репозиторий/извлечь ("fetch") всю информацию, которая есть в репозитории;
+init - создать репозиторий;
+merge - объединить две ветви;
+pull - интегрировать удаленный репозиторий с локальным;
+push - отправить изменения в удаленный репозиторий;
+tag - управление тегами;
+worktree - управление деревями разработки.
+
+git --help -w
+использование: git [--version] [--help] [-C <path>] [-c <name>=<value>]
+           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
+           <command> [<args>]
+
+$git --help -w
+Стандартные команды Git используемые в различных ситуациях: 
+создание рабочей области (смотрите также: git help tutorial)
+   clone     Клонирование репозитория в новый каталог
+   init      Создание пустого репозитория Git или переинициализация существующего
+              работа с текущими изменениями (смотрите также: git help everyday)
+   add       Добавление содержимого файла в индекс
+   mv        Перемещение или переименование файла, каталога или символьной ссылки
+   restore   Восстановление файлов в рабочем каталоге
+   rm        Удаление файлов из рабочего каталога и индекса просмотр истории и 
+             текущего состояния (смотрите также: git help revisions)
+   bisect    Выполнение двоичного поиска коммита, который вносит ошибку
+   diff      Вывод разницы между коммитами, коммитом и рабочим каталогом и т.д.
+   grep      Вывод строк, соответствующих шаблону
+   log       Вывод истории коммитов
+   show      Вывод различных типов объектов
+   status    Вывод состояния рабочего каталога выращивание, маркировка и правка вашей общей истории
+   branch    Вывод списка, создание или удаление веток
+   commit    Запись изменений в репозиторий
+   merge     Объединение одной или нескольких историй разработки вместе
+   rebase    Повторное применение коммитов над верхушкой другой ветки
+   reset     Сброс текущего состояния HEAD на указанное состояние
+   switch    Переключение веток
+   tag       Создание, вывод списка, удаление или проверка метки, подписанной с помощью GPG
+совместная работа (смотрите также: git help workflows)
+   fetch     Загрузка объектов и ссылок из другого репозитория/извлечь (fetch) всю информацию, которая есть в репозитории;
+   pull      Извлечение изменений и объединение с другим репозиторием или локальной веткой
+   push      Обновление внешних ссылок и связанных объектов
+
+
+dpkg -s git-gui  -  /usr/lib/git-core/git-gui
+книга GIT progit-ru.1027.pdf  
+Собрать git из исходников (для сборки и установки бинарных файлов Git):
+1)установить библ. зависимостей для git
+$ apt-get install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+2) Если у вас есть все необходимые зависимости, вы можете пойти
+дальше и скачать самый свежий архив с исходниками из следующих
+мест. С сайта Kernel.org https://www.kernel.org/pub/software/scm/git,
+или зеркала на сайте GitHub https://github.com/git/git/releases. Конечно,
+немного проще, скачать последнюю версию с сайта GitHub, но на странице kernel.org релизы имеют подписи, если вы хотите проверить
+что скачиваете.
+Затем, скомпилируйте и установите:
+$ tar -zxf git-2.0.0.tar.gz
+$ cd git-2.0.0
+$ make configure
+$ ./configure --prefix=/usr
+$ make all doc info
+$ sudo make install install-doc install-html install-info
+После этого, вы можете получить Git с помощью службы
+обновлений Git:$ git clone git://git.kernel.org/pub/scm/git/git.git
+
+регистрация в git
+git config --global user.name "Vic M";
+git config --global user.email "victornm1975@gmail.com";
+git config --global core.editor nano;
+
+Если вы собираетесь начать использовать Git для существующего
+проекта, то вам необходимо перейти в директорию проекта и в
+командной строке ввести $ git init
+ команда создаётподдиректорию .git, содержащую  файлы репозитория
+
+!!Git имеет три основных состояния, в которых могут находиться файлы: 
+ зафиксированном (committed), изменённом (modified) и подготовленном (staged).
+“Зафиксированный” - файл уже сохранён в вашей локальной базе. 
+К "изменённым" относятся файлы, которые поменялись, но ещё не были зафиксированы.
+"Подготовленные файлы" — это изменённые файлы, отмеченные для включения в следующий коммит.
+Три основные секции проекта Git: Git директория (Git directory), рабочая директория (working directory), область
+подготовленных файлов (staging area)
+
+
+Git директория (".git")— это то место где Git хранит метаданные и базу объектов вашего проекта.
+  это та часть, которая копируется при клонировании репозитория с  другого компьютера.
+Рабочая директория является снимком версии проекта. Файлыраспаковываются из сжатой базы данных в Git директории и
+располагаются на диске, для того, чтобы их можно было изменять и использовать.
+Область подготовленных файлов — это файл, располагающийся в вашей Git директории, в нём содержится информация о том, 
+какие изменения попадут в следующий коммит. Эту область ещё называют “индекс” (или область "stage").
+Базовый подход в работе с Git выглядит так:
+1. Вы изменяете файлы в вашей рабочей Git директории.
+2. Вы добавляете файлы в индекс, добавляя тем самым их снимки в область подготовленных файлов.
+3. Когда вы делаете коммит, используются файлы из индекса, как есть и этот снимок сохраняется в 
+   вашу Git директорию.
+Если определённая версия файла есть в Git директории, эта версия закоммичена. Если файл изменен и добавлен в индекс, значит он
+будет добавлен в следующий коммит. И если файл был изменён с момента последнего распаковывания из репозитория, но не был
+добавлен в индекс, он считается изменённым.
+
+"Снимок файлов" - состояние файлов на определённый момент времени.
+
+Git НЕ хранит и не обрабатывает данные как изменения к пред.версиям файлов. Вместо этого, подход 
+ Git’а к хранению данных больше похож на набор снимков (snapshot) миниатюрной файловой системы.Когда
+ делаете коммит, то есть сохраняете состояние своего проекта в Git’е, система запоминает как выглядит
+каждый файл в этот момент, и сохраняет ссылку на этот снимок. Для увелечения эффективности,
+если файлы не были изменены, Git не запоминает эти файлы вновь, а только создаёт ссылку на предыдущую 
+версию идентичного файла, который уже сохранён. Git представляет свои данные как, скажем, поток снимков.
+Файл  может находиться в одном из двух состояний: 
+ a)под версионным контролем (отслеживаемые) и b)нет (неотслеживаемые). 
+ Отслеживаемые файлы те файлы, которые были в последнем слепке состояния проекта (snapshot); 
+они могут быть неизменёнными, изменёнными или подготовленными к коммиту (staged).
+
+Как только вы отредактируете файлы, Git будет рассматривать их как изменённые, т.к. вы изменили их с момента
+последнего коммита. Вы индексируете (stage) эти изменения и затем фиксируете все индексированные изменения (commit), 
+а затем цикл повторяется
+
+Запомните, что Коммит сохраняет "снимок состояния индекса". Каждый раз, когда вы делаете коммит, вы сохраняете
+снимок состояния вашего проекта, который позже вы можете восстановить или с которым можно сравнить текущее состояние.
+
+cd ~/dir-git
+git init #включить в каталоге git, появится каталог .git
+git config --global init.defaultBranch MasteR
+ 
+На этом этапе проект ещё непод версионным контролем. Чтобы его включить, надо добавить файлы их в индекс и  
+осуществить первый коммит изменений. Добиться этого вы сможете запустив команду git add несколько раз, указав
+индексируемые файлы, а затем выполнив git commit:
+
+git add file{1..3} #добавить файлы под контроль, "в индекс", проидексировать, перевсти в состоние staged 
+git commit -m '1-t project version'  #Команда git commit берёт все данные, добавленные в индекс спомощью git add, 
+      и сохраняет их слепок во внутренней базе данных, а затем сдвигает указатель текущей ветки на этот слепок
+ "- m" - комментарий к коммиту
+[master (корневой коммит) fa32c40] 1-t project version
+ 3 files changed, 3 insertions(+)
+ create mode 100644 file1
+ create mode 100644 file2
+ create mode 100644 file3
+
+git commit -a -m 'коментарий....' # автоматически индексировать все отслеживаемые на момент коммита файлы, 
+      позволяя вам обойтись без "git add"!!
+
+если вы фиксируете изменения, и понимаете, что забыли проиндексировать изменения в файле, который хотели
+включить в коммит, можно сделать примерно так:
+git commit -m 'initial commit'
+git add forgotten_file
+git commit --amend #В итоге получится единый коммит — второй коммит заменит результаты первого.
+
+git status (git status -s)# определить состояние файлов  и ТЕКУЩУЮ ветку
+Текущая ветка: master
+нечего коммитить, нет изменений в рабочем каталоге
+echo "file3 3 dop" >> file3 # дополнить file3 строкой 
+
+git diff --cached (или git diff --staged) # сравнить изменения в файлах, добавленных в  индекс
+diff --git a/file3 b/file3
+index 8d85f45..0c7ae9e 100644
+--- a/file3
++++ b/file3
+@@ -1 +1,2 @@
+-file3 33
++file3 3 dop
++New line1
+ 
+git log  или подробно  git log --stat
+commit 2966efe047df274451b7675091fd0ecfe29fed24 (HEAD -> vt1, rep1/vt1) 
+Author: Vic M <victornm1975@gmail.com>
+Date:   Fri Dec 29 22:51:46 2023 +0300
+    add dir dr_bak  22:51 12/29/2023
+commit 2e6d9f13664ec6942021995c15455fb66c38dcc6
+Author: Vic M <victornm1975@gmail.com>
+Date:   Fri Dec 29 22:41:43 2023 +0300
+    chng file0 22:41 12/29/2023
+
+git log --pretty=format:"%h - %an, %ar : %s"
+d0b84df - Vic M, 15 минут назад : 3я версия про19:27 12/16/2023екта, доб-н file0б измен file1 и file2
+31b1f28 - Vic M, 15 часов назад : дополнен файл file3
+fa32c40 - Vic M, 2 дня назад : 1-t project version
+git log --pretty=format:"%h %s" --graph
+
+Связаться с  git cli в github.com с применеием login/passwd не получилось, т.к на сайте  github.com
+сказано, что требуется еще предъявление OAuth токена. Поэтому получилось только через аутентиф по ssh и RSA
+ https://docs.github.com/ru/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+ssh-keygen -t ed25519 -C "victornm1975@gmail.com" # сгенерировать ключи 
+публичный скопипастить и вставить  https://github.com/settings/keys, его fingerprint проверить 
+ssh-keygen -lf /home/oem/.ssh/id_ed25519.pub # проверить fingerprint
+256 SHA256:rxseNQJXi4RU7fyDvqK7Aa7+qotDu6d9CIkJ3XS9PmE victornm1975@gmail.com (ED25519)
+   https://vijaytembugade.medium.com/setting-up-git-with-ssh-5accfb3e444
+  на странице репо github.com, в кнопке <>CODE опцию "Use a password-protected SSH key"
+
+--учетная запись github: VicM0407 5..1_GitHub_mvn--
+
+git remote add origin git@github.com:VicM0407/first.git # настроить доступ к удал репо first.git по SSH
+     # обновить репо first.git  на удаленном github.com по SSH локальными файлами
+  Перечисление объектов: 13, готово.
+  Подсчет объектов: 100% (13/13), готово.
+  При сжатии изменений используется до 2 потоков
+  Всего 13 (изменений 1), повторно использовано 0 (изменений 0), повторно использовано пакетов 0
+  remote: Resolving deltas: 100% (1/1), done.
+  To github.com:VicM0407/first.git
+   * [new branch]      main -> main
+  Ветка «main» отслеживает внешнюю ветку «main» из «origin».
+
+Клонировать проект с сервера в локальный репозиторий
+git clone git@github.com:VicM0407/SECOND.git
+
+git remote add origin git@github.com:VicM0407/SECOND.git  Добавить удаленный репо с Github к локальному
+
+git remote -v #просмотр списка удаленных репозиатриев
+origin  https://gitlab.com/losst/test-repo.git (fetch) fetch #URL для извлечения/  получить
+origin  https://gitlab.com/losst/test-repo.git (push)  push #URL для отправки/ отправить
+origin2 https://github.com/schacon/simplegit-progit (fetch)
+origin2 https://github.com/schacon/simplegit-progit (push)
+
+git remote show origin #просмотр подробно удаленного repo origin
+* внешний репозиторий origin
+  URL для извлечения: git@github.com:VicM0407/SECOND.git
+  URL для отправки: git@github.com:VicM0407/SECOND.git
+  HEAD ветка: main
+  Внешняя ветка:
+    main отслеживается
+  Локальная ветка, настроенная для «git pull»:
+    main будет слита с внешней веткой main
+  Локальная ссылка, настроенная для «git push»:
+    main будет отправлена в main (локальная ветка устарела)
+
+git push origin main  #отправить изменения в удаленный репозиторий !в ветку ОДНОИМЕННУЮ main!: 
+Запись объектов: 100% (3/3), 388 байтов | 388.00 КиБ/с, готово.
+Всего 3 (изменений 2), повторно использовано 0 (изменений 0), повторно использовано пакетов 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:VicM0407/SECOND.git
+   5141e45..08c7632  main -> main
+
+git push origin MasteR:master #отправить файлы в удаленный реп  Из локальной ветки MasteR
+			       в удаленную ветку master
+Перечисление объектов: 6, готово.
+remote: Resolving deltas: 100% (1/1), done.
+To github.com:VicM0407/ProjLnx.git
+ * [new branch]      MasteR -> master
+
+git push origin vt1:vt1  #отправить файлы в удаленный репо  Из локальной ветки vt1
+			  в удаленную ветку vt1
+Перечисление объектов: 8, готово.
+To github.com:VicM0407/ProjLnx.git
+ * [new branch]      vt1 -> vt1
+
+git push # !! оправить изменения на сервер для той ветки, на которой указатель HEAD, в данном случае  
+     branch2, изменения выполнены только  для barnch2, т.к. она изменилась
+Запись объектов: 100% (3/3), 9.87 КиБ | 306.00 КиБ/с, готово.
+Всего 3 (изменений 2), повторно использовано 0 (изменений 0), повторно использовано пакетов 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:VicM0407/SECOND.git
+   ff3ca52..f4fb9fd  branch2 -> branch2
+
+
+git pull origin main # получить изменения из репозтр origin, появился созданный на сервере doc файл
+Из github.com:VicM0407/SECOND
+ * branch            main       -> FETCH_HEAD
+   44835d8..7450d95  main       -> origin/main
+Обновление 44835d8..7450d95
+Fast-forward
+ ... Linux systemd grub ps top htop strace fstab mount.doc" | Bin 0 -> 3148352 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 " Linux systemd grub ps top htop strace fstab mount.doc"
+
+"Cпециальный указатель, который называется HEAD (верхушка) - в Git это указатель на локальную ветку,
+ на которой вы находитесь" книга progit_webtackles.pdf стр 49
+
+git push origin main # отправить на сервер измененный doc файл -> сработало ок!
+
+git pull origin main  # получить с сервера 2 изменных на сервере txt файла
+Из github.com:VicM0407/SECOND
+ * branch            main       -> FETCH_HEAD
+   f1d4fa9..f5a0441  main       -> origin/main
+Обновление f1d4fa9..f5a0441
+Fast-forward
+ listof.txt | 1 +
+ lst_ll     | 2 ++
+ 2 files changed, 3 insertions(+)
+
+На сервере github добавил доп-ю ветку "branch2", в ней оказались все файлы изветки main
+Затем на сервере удалил из ветки main файл "Linux systemd grub ps top htop strace fstab mount.doc", но при этом
+ в ветке "branch2" этот файл остался!!!
+
+git pull origin branch2) # добавить с сервера ветку "branch2"
+Из github.com:VicM0407/SECOND
+ * branch            branch2-(doc) -> FETCH_HEAD
+ * [новая ветка]     branch2-(doc) -> origin/branch2
+Уже актуально.
+
+git branch -a
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/branch2
+  remotes/origin/main
+
+git checkout --track origin/branch2-\(doc\) # переключился на отсеживание ветки на сервере "branch2-(doc)"
+   список файлов в /dir-git2/SECOND/ изменился , в т.ч ЕСТЬ файл 'Linux... .doc", в "branch2-(doc)" ОСТАЛСЯ!!
+Ветка «branch2-(doc)» отслеживает внешнюю ветку «branch2-(doc)» из «origin».
+Переключились на новую ветку «branch2-(doc)»
+oem@LnxPC1:~/dir-git2/SECOND$ ll /dir-git2/SECOND/
+...
+-rw-rw-r-- 1 oem oem 2811904 дек 17 20:58 'Linux Ядро Kernel Процессы и их свойства systemd grub ps top htop strace fstab mount .doc'
+...
+
+git add lst_f1
+git commit -m "add lst_f1 on pc 21:16"
+[branch2-(doc) ff3ca52] add lst_f1 on pc 21:16  1 file changed, 14 insertions(+)
+
+git push origin # файл lst_f1 в комите автоматом добавился на сервере в ветку branch2-(doc) !!
+Всего 3 (изменений 1), повторно использовано 0 (изменений 0), повторно использовано пакетов 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:VicM0407/SECOND.git
+   f5a0441..ff3ca52  branch2-(doc) -> branch2-(doc)
+
+
+git checkout origin/main
+Примечание: переключение на «origin/main».
+Вы сейчас в состоянии «отсоединённого указателя HEAD». Можете осмотреться,
+внести экспериментальные изменения и зафиксировать их, также можете
+отменить любые коммиты, созданные в этом состоянии, не затрагивая другие
+ветки, переключившись обратно на любую ветку.
+Если хотите создать новую ветку для сохранения созданных коммитов, можете
+сделать это (сейчас или позже), используя команду switch с параметром -c.
+Например:  git switch -c <новая-ветка>
+Или отмените эту операцию с помощью:   git switch -
+
+git switch -
+Предыдущая позиция HEAD была e9e7cd1 add lstdft  on pc 20:46
+Переключились на ветку «branch2-(doc)»Эта ветка соответствует «origin/branch2-(doc)».
+git switch main # переключиться на ветку main
+Переключились на ветку «main»
+Эта ветка соответствует «origin/main».
+
+17:04 12/25/2023
+
+git pull origin branch2 # интегрировать ветку уадленного репо с локальным
+remote: Enumerating objects: 4, done.        KILLLLLLLLLLLLLLLLLLL!!!!!!!!!!!!!!!!
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
+Распаковка объектов: 100% (3/3), 634 байта | 634.00 КиБ/с, готово.
+Из github.com:VicM0407/SECOND
+ * branch            branch2    -> FETCH_HEAD
+ * [новая ветка]     branch2    -> origin/branch2
+подсказка: You have divergent branches and need to specify how to reconcile them.
+подсказка: You can do so by running one of the following commands sometime before
+подсказка: your next pull:
+подсказка:
+подсказка:   git config pull.rebase false  # merge (the default strategy)
+подсказка:   git config pull.rebase true   # rebase
+подсказка:   git config pull.ff only       # fast-forward only
+подсказка:
+подсказка: You can replace "git config" with "git config --global" to set a default
+подсказка: preference for all repositories. You can also pass --rebase, --no-rebase,
+подсказка: or --ff-only on the command line to override the configured default per
+подсказка: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+
+man git checkout - Обновляет файлы в рабочем дереве, чтобы они соответствовали версии в 
+ индексе или указанном дереве. Если спецификация пути не указана, git checkout также обновит
+ указатель HEAD, чтобы установить его на указанную ветку в качестве текущей.
+
+
+man git-switch  Переключиться на указанную ветку. Рабочее дерево и индекс обновляются в соответствии 
+с веткой. Все новые коммиты будут добавляться в начало этой ветки. ЭТА КОМАНДА ЭКСПЕРИМЕНТАЛЬНАЯ. 
+ ПОВЕДЕНИЕ МОЖЕТ ИЗМЕНИТЬСЯ!!!!
+
+
+git checkout origin/branch2 # переключиться на ветку breanch2 репо origin
+Примечание: переключение на «origin/branch2».
+Вы сейчас в состоянии «отсоединённого указателя HEAD». Можете осмотреться,
+внести экспериментальные изменения и зафиксировать их, также можете
+отменить любые коммиты, созданные в этом состоянии, не затрагивая другие
+ветки, переключившись обратно на любую ветку.
+Если хотите создать новую ветку для сохранения созданных коммитов, можете
+сделать это (сейчас или позже), используя команду switch с параметром -c.
+Например:  git switch -c <новая-ветка> Или отмените эту операцию с помощью:
+  git switch - Отключите этот совет, установив переменную конфигурации
+advice.detachedHead в значение false
+
+теперь в каталоге по ls будет список ветки branch2  репо origin
+
+git checkout origin/main # переключиться на ветку main  репо origin
+Предыдущая позиция HEAD была ff3ca52 add lst_f1 on pc 21:16  <- HEAD указывает на послед комит ветки main
+HEAD сейчас на e9e7cd1 add lstdft  on pc 20:46
+
+
+git checkout HEAD~1 # переключиться на предыд коммит (-1 коммит влево) по текущей ветке!!
+git checkout HEAD  aac97d2a31 # переключиться на комит с ID  aac97d...
+
+git switch branch2 # переключиться на ветку branch2 репо origin
+Предыдущая позиция HEAD была e9e7cd1 add lstdft  on pc 20:46   <- HEAD указывает на послед комит ветки branch2
+Ветка «branch2» отслеживает внешнюю ветку «branch2» из «origin».
+Переключились на новую ветку «branch2»
+
+
+вопрос ! как теперь в cli перекючиться на ветку main
++ слияние 2х веток   см выше ... git branch -a
+
+
+git remote rename pb paul # переименование  репо pb в paul
+it remote...
+git log --pretty=format:"%h %s" --graph # просмотр истории ветвления с графич отображением
+
+Ветка в Git — это просто легковесный подвижный указатель на один из этих коммитов.
+Имя ветки по умолчанию в Git — master. Когда вы вначале создаёте коммиты, вам даётся
+ветка master, указывающая на последний сделанный коммит. При каждом новом коммите
+указатель сдвигается вперёд автоматически.
+Что происходит, когда вы создаёте новую ветку? Итак, этим вы создаёте новый указатель,
+который вы можете перемещать. 
+Откуда Git узнает, на какой ветке вы находитесь в данный момент? Он хранит специальный
+указатель, который называется HEAD (верхушка) - на локальную ветку, на которой вы находитесь.
+В данном случае вы всё ещё на ветке master. Команда git branch только создала новую ветку, она 
+не переключила вас на неё
+
+git checkout -b vt1 # создать в репо новую ветку vt1 (скопировать все папки из main) и 
+                            !!! перключиться на нее!!!
+Переключились на новую ветку «vt1»
+mkdir dr_bak; tar -cjf dr_bak/archive.tar file*; echo "This is archive of file*" >> dr_bak/readme.txt
+git add dr_bak # добавить в индекс репо каталог dr_bak и все его файлы !!!Отдельно файлы не добавл-ся
+git commit -a -m "add dir dr_bak  22:51 12/29/2023" # создать коммит (фиксацию) с каталогом и всеми
+                                                    его файлами !!!!
+[vt1 2966efe] add dir dr_bak  22:51 12/29/2023
+ 2 files changed, 1 insertion(+)
+ create mode 100644 dr_bak/archive.tar
+ create mode 100644 dr_bak/readme.txt
+
+
+?? git switch  vs chackout ?? 
+man git checkout - Обновляет файлы в рабочем дереве, чтобы они соответствовали версии в 
+ индексе или указанном дереве. Если спецификация пути не указана, git checkout также обновит
+ указатель HEAD, чтобы установить его на указанную ветку в качестве текущей.
+man git-switch  Переключиться на указанную ветку. Рабочее дерево и индекс обновляются в соответствии 
+с веткой. Все новые коммиты будут добавляться в начало этой ветки. ЭТА КОМАНДА ЭКСПЕРИМЕНТАЛЬНАЯ. 
+ ПОВЕДЕНИЕ МОЖЕТ ИЗМЕНИТЬСЯ!!!!
+
+git switch branch2 # переключиться на ветку
+Переключились на ветку «branch2»
+Эта ветка соответствует «origin/branch2».
+git show -v # просмотр указателя HEAD
+commit 738212bb584a56b1563225d5dea24ca514692c60 (HEAD -> branch2, origin/branch2)
+Author: Vic M <victornm1975@gmail.com>
+Date:   Thu Dec 28 22:25:50 2023 +0300
+
+git switch main
+Переключились на ветку «main»
+Эта ветка соответствует «origin/main».
+git show -v
+commit aade0dcace926d88b65de92816dc69a2ca6e9bdb (HEAD -> main, origin/main)
+
+git checkout branch2
+Переключились на ветку «branch2»
+Эта ветка соответствует «origin/branch2».
+git show -v
+commit 738212bb584a56b1563225d5dea24ca514692c60 (HEAD -> branch2, origin/branch2)
+---<
+**Слияние**
+Всё, что вы должны сделать ― перейти на ту ветку, в которую вы хотите внести свои изменения (git checkout BR1) и
+  выполнить команду git merge BR2, с указанием той ветки, которую сливаем с первой
+git checkout  vt1 # перейти на ветку слияния
+git merge vt1.1 # слить ветку vt1.1 с веткой vt1
+Обновление 2966efe..e5b117f
+Fast-forward
+ dr_bak/archive2.tar | Bin 0 -> 325 bytes
+ file4               |   1 +
+ 2 files changed, 1 insertion(+)
+ create mode 100644 dr_bak/archive2.tar
+ create mode 100644 file4
+
+git push rep1
+To github.com:VicM0407/first.git
+ ! [rejected]        vt1 -> vt1 (fetch first)
+error: не удалось отправить некоторые ссылки в «github.com:VicM0407/first.git»
+подсказка: Обновления были отклонены, так как внешний репозиторий содержит
+подсказка: изменения, которых у вас нет в вашем локальном репозитории.
+
+git pull rep1 vt1
+Из github.com:VicM0407/first
+ * branch            vt1        -> FETCH_HEAD
+подсказка: You have divergent branches and need to specify how to reconcile them.
+подсказка: You can do so by running one of the following commands sometime before
+подсказка: your next pull:
+подсказка:
+подсказка:   git config pull.rebase false  # merge (the default strategy).....
+
+git config pull.rebase false
+git pull rep1 vt1
+Из github.com:VicM0407/first
+ * branch            vt1        -> FETCH_HEAD
+Merge made by the 'ort' strategy.
+Merge made by the 'ort' strategy.
+ dr_bak/readme.txt | 1 +
+ file2 => file2_1  | 1 +
+ 2 files changed, 2 insertions(+)
+ rename file2 => file2_1 (92%)
