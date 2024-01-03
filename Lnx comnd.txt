@@ -1,10 +1,10 @@
-!! шрифт для файла Consolas +1 +2 +vt1
-+vt11111111
+!! шрифт для файла Consolas
 для терминалов RGB:60-60-60 цвет фона, цвет шрифта 248-234-188 
 !Вызов/переключения tty терминалов ctrl+alt+f1-f5
 !!! При нехватке места - удалить журналы systemd из /var/log/journal !!
 sudo journalctl --vacuum-size=1G
 VBOX - частично в ядре как mod частично в user space как ПО,   systemd - в UsrSpace
+
 Забирай icon бесплатные гайды по изучению Python, PHP, Linux, FreePBX
 https://wiki.merionet.ru/articles/ustanovlenie-i-prekrashhenie-tcp-soedineniya
 https://habr.com/ru/articles/711578/ TCP и UDP, или Два столпа Интернета 
@@ -32,15 +32,19 @@ DNAT проброс портов firewall-cmd --zone=external --add-forward-port
 донастроить ssh-agent https://infra.gnulinux.pro/ru/latest/infra/06/06._Jump_host.html
 
 
-Подробно о HTTP Галеев
+
+Подробно о HTTP Галеев и др
+https://www.youtube.com/watch?v=QRDZtarESWI&t=1432s - также подрробно о HTTP методах get post head!
 https://www.youtube.com/watch?v=uxoGYIWCQZg&list=PLXR11-5Ez3irR9J3dlEqtuCplYzy2cwdD&index=16
 
-прелобразовние в формаь u64? Галиев!
+Передача двоичных файлов по HTTP выполянется с применением преобразования base64
+https://www.youtube.com/watch?v=QRDZtarESWI&t=1432s - также подрробно о HTTP методах get post head!
 https://www.youtube.com/watch?v=6_mKtUWSoUs&list=PLlb7e2G7aSpT5DX9rQKnmZMK0DG7dWrUc&index=11
-GET / HTTPS/1.1
-Host: www.onliner.by
+cat test.png | base64
 
 прдача файлов по сети  scp rsync sftp
+
+markdown конвертер в html https://md2html.vercel.app/
 
 
 https://www.youtube.com/watch?v=6uy7x2-LpTE
@@ -88,12 +92,31 @@ eval $(ssh-agent -s)
 
 
 
-Postman
+Postman — программа, которая проверяет работу API с помощью запросов
 https://www.postman.com/
 https://sky.pro/media/postman-kak-polzovatsya/
 https://www.drawio.com/ diagrams.net
 
 МИНИ задачи 
+
+ = rsync = урок 56. GNULinux Передача файлов по сети
+rsync -av _dir1/ oem@192.168.100.12:~/ #отправить файлы из _dir1 на .12 в /home/oem
+sending incremental file list ./ file1 file2 file3
+
+rsync -av _dir1 oem@192.168.100.12:~/ #отправить файлы из _dir1 на .12 в /home/oem/_dir
+sending incremental file list _dir1/ _dir1/file1 _dir1/file2 _dir1/file3
+
+rsync -avzP --exclude=.git _dir1 oem@192.168.100.12:~/ #отправить файлы из _dir1 на .12 в /home/oem/_dir 
+           !! за исключением файлов и каталогов ".git", в сжатом виде и показать прогресс передачи !!
+
+rsync -av oem@192.168.100.12:~/debian ~/ #забрать с удален hosta .12 папку и все файлы вней и поместить ~/
+
+rsync -av --delete  ~/_dir1 oem@192.168.100.12:~/ # скопировать на хост .12 измененные файлы в  ~/_dir1, 
+  а  также удалить на  .12:~/_dir1 файлы, которые были удалены в ~/_dir1 хоста-источника, те выполнить
+  синхронизацию папок
+
+
+
     fuse  файловые системы fuse(8)           fuse - configuration and mount options for FUSE file systems
 DESCRIPTION
        FUSE  (Filesystem  in Userspace) is a simple interface for userspace programs to export a vir‐
@@ -1199,6 +1222,11 @@ echo $?  -> 1
 true && pwd  -> /home/oem
 false || pwd -> /home/oem
 
+
+Массивы https://linuxhint.com/manipulate-control-data-bash-arrays/ и др виды см тут
+F[0]='line0';F[0]='line0'; printf 'file=%s\n' "${F[@]}"
+declare -a names=('Michael' 'David' 'Alexander' 'Thomas' 'Robert' 'Richard'); printf '%s\n' "${names[@]}"
+
 ДОРАБОТАТЬ
 date | cut -d" " -f5 | cut -d: -f1 //выделить час из текщего времени
 сделать скрипт - установить  ~/.bashrc привествие echo "Have a nice day/night,$USER"
@@ -1209,15 +1237,15 @@ for i in {1..10}; do echo "(${RANDOM:0:3}) ${RANDOM:0:3}-${RANDOM:0:4}" >> phone
 Эта команда создаст файл с именем phonelist.txt, содержащий 10 телефонных номеров
 for i in * ; do echo $i; done // вывести все файлы в каталоге
 for i in {1..100}; do touch /tmp/ffile$i;done // создать 100 файлов /tmp/ffilei
+for i in {1..10}; do echo "Line $i" >> f1; echo "strka $i" >> f2; done
 
 for f in /sys/devices/system/cpu/vulnerabilities/*; do echo "${f##*/} -" $(cat "$f"); done 
 
-FILES=$(ls) // занести в FILES список всех названий файлов;
-for file in ${FILES[@]}; do echo File: $file; done // пройти переменной file последовательно 
-   по FILES и  вывести на stdout названия файлов  // я[@] - вещь не обязательная? 
+FILES=$(ls);\ // занести в FILES список всех названий файлов;
+j=1;for file in ${FILES[@]}; do echo File$j: $file; j=$(($j+1));done #пройти переменной file п
+  последовательно по массиву FILES и  вывести названия файлов  // я[@] - вещь не обязательная? 
                                         см man bash -> ${name[@]}
-  
- * * * END for цикл * * * 
+   * END for цикл * 
 
 
 https://linuxhint.com/bash_globbing_tutorial/ скрипты и globbing
@@ -11789,9 +11817,4 @@ ip -6 neighbor show #linux
 Надо понимать, что, по сути, это один из способов взлома, однако, он может быть полезен в том случае, если возникли проблем с ssh. Для того, чтобы предотвратить атаку настраивайте политику безопасности и межсетевой экран
 А.Созыкин Анализ Ethernet Wi-fi HTTP NDP DNS SNMP ICMP FTP IMAP POP3 IPv6 и дв wireshark 
 https://www.youtube.com/playlist?list=PLtPJ9lKvJ4oiKPQ9GXOvntj44Eu8IGAJK 
-line 7
-line 8
-line 9
-line 10
-line 11
-line 12
+markdown конвертер в html https://md2html.vercel.app/
