@@ -1,0 +1,16 @@
+# /etc/exports: the access control list for filesystems which may be exported
+#		to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+
+#монтировать каталог doc  с правами rw
+/mnt/nfs 192.168.100.0/24(rw,sync,crossmnt,fsid=0,no_subtree_check,wdelay,all_squash)
+/mnt/nfs/doc 192.168.100.0/24(rw,sync,no_subtree_check,wdelay,all_squash,anonuid=29999,anongid=29999)
+#монтировать каиалог adm  с readonly
+/mnt/nfs/adm 192.168.100.11(ro)
