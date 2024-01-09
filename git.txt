@@ -1,9 +1,11 @@
+14:55 1/2/2024
 =GITHUB GITLAB=
 github: VicM0407 5..1_GitHub_mvn16:23 12/25/2023
 https://losst.pro/ustanovka-gitlab-v-ubuntu-18-04
 https://losst.pro/kak-polzovatsya-gitlab
 https://losst.pro/kak-polzovatsya-git-dlya-nachinayushhih
 https://ru.wikipedia.org/wiki/Git
+https://git-school.github.io/visualizing-git/  !!!!
 Наборы Патчей Патчи - различия между файлами (книга про GIT) 
 +проет из "не работант smb"
 
@@ -30,6 +32,8 @@ fetch - скачать удаленный репозиторий/извлечь 
 init - создать репозиторий;
 merge - объединить две ветви;
 pull - интегрировать удаленный репозиторий с локальным;
+# pull=fetch+merge (pull включает в себя загрузку содержимого удаленного репо в локальный образ 
+ удаленного репо + объединение файлов локального репо с ним, Галиев Видео про GIT)
 push - отправить изменения в удаленный репозиторий;
 tag - управление тегами;
 worktree - управление деревями разработки.
@@ -258,7 +262,8 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:VicM0407/SECOND.git
    5141e45..08c7632  main -> main
 
-git push origin MasteR:master #отправить файлы в удаленный реп  Из локальной ветки MasteR
+
+git push origin MasteR:master #отправить файлы в удаленный репо  Из локальной ветки MasteR
 			       в удаленную ветку master
 Перечисление объектов: 6, готово.
 remote: Resolving deltas: 100% (1/1), done.
@@ -450,10 +455,18 @@ git switch branch2 # переключиться на ветку branch2 репо
 Ветка «branch2» отслеживает внешнюю ветку «branch2» из «origin».
 Переключились на новую ветку «branch2»
 
+hooks - специальные файлы в директории .git/hooks/, хранящие шаблоны скриптов, которые будут запускаться
+  (после ихнастройки) в опредеелнные моменты работы с git (перед/после выполния commit, push и тд)
+
+Галиев: "Pull request" механизм на github для коммандной работы и обсуждения вносимых изменении
+   и объединений веток?? изучить доп-но....
+
 
 git rebase --onto master server client # также смотри в книге тип перемещения указателя HEAD
 
 git remote rename pb paul # переименование (ЛОКАЛЬНОЕ на pc) репо pb в paul
+
+git branch -d br1 # удалить ветку br1
 
 git checkout -b vt1 # создать в репо новую ветку vt1 (скопировать все папки из main) и 
                             !!! перключиться на нее!!!
