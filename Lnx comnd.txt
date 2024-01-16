@@ -97,12 +97,13 @@ https://www.youtube.com/watch?v=ZHNPG_2kCnQ&t=2s
 == Почта и DNS "GNU Linux Pro", Murad Aslanov ==
  DNS записи для почтовых серверов  MX PTR SPF DKIM DMARC https://habr.com/ru/articles/496018/ 
 
-SPF – запись, которая разрешает определённым адресам отправлять сообщение с указанного домена,
- и говорит, что делать если сообщение пришло с другого адреса. SPF  нужна для защиты от "спуфинга"–атак,
-  когда злоумышленник притворяется одним из пользователей отправителя.
+RR SPF (Sender Policy Framework) запись определяет адреса, с которых может отправлять сообщение по 
+ SMTP с указанного домена,  и говорит, что делать если сообщение пришло с другого адреса. 
+ SPF ужна для защиты от "спуфинг"–атак, когда злоумышленник притворяется одним из пользователей отправителя.
  Допустим, вы, как отправитель, заявляете, что разрешаете отправлять почту из домена domain.org только 
  серверу с адресом mail.domain.org. А если сообщение придёт на оконечный или relay сервер SNMP не сэтого
  адреса, но в поле отправитель указан домен domain.org, то  отклонять это сообщение как недоверенное
+ !Запросы к RR  SPF  делает  принимающий сообщение  сервер SMTP (на самом деле ESMTP )
 !! SPF синтаксис и правила отлично описаны в https://en.wikipedia.org/wiki/Sender_Policy_Framework
 
 Настройка SPF записей, v=spf1- указание версии spf
@@ -144,40 +145,84 @@ mgts.by.                60      IN      TXT     "v=spf1 +mx +ip4:82.209.240.245 
 
 НЕ ВСЕ DNS серверы корректно отдают записи в запросе "ANY"! указывать конкретно "TXT"
 
+dig -t txt wikipedia.org # spf запись для wikipedia.org
+wikipedia.org.          600     IN      TXT     "v=spf1 include:wikimedia.org ~all"
+dig -t txt wikimedia.org
+wikimedia.org.          600     IN      TXT     "v=spf1 ip4:185.15.59.0/24 ip4:208.80.152.0/22 ip6:2620:0:860::/46 include:_spf.google.com ip4:74.121.51.111 ~all"
+dig -t a wikimedia.org
+wikimedia.org.          600     IN      A       185.15.59.224 # адрес входит в spf запись
+dig -t mx wikimedia.org
+wikimedia.org.          3600    IN      MX      10 mx1001.wikimedia.org.
+wikimedia.org.          3600    IN      MX      10 mx2001.wikimedia.org.
+dig -t a mx1001.wikimedia.org.
+mx1001.wikimedia.org.   3600    IN      A       208.80.154.76 #адрес входит в spf 
 
-nslookup.exe -type=txt wikipedia.org
-nslookup.exe -type=txt wikimedia.org &???????????????
+dig -t a smtp.office365.com # CNAME могут быть на разные уровни домен имен,например 3го на 4ый
+smtp.office365.com.     192     IN      CNAME   outlook.office365.com.
+outlook.office365.com.  54      IN      CNAME   ooc-g2.tm-4.office.com.
+ooc-g2.tm-4.office.com. 32      IN      CNAME   outlook.ms-acdc.office.com.
+outlook.ms-acdc.office.com. 22  IN      CNAME   FRA-efz.ms-acdc.office.com.
+FRA-efz.ms-acdc.office.com. 2   IN      A       52.97.189.98
 
+клиент outlook отпрв почту с шифрован по QUIC из серверов outlook 52.98.242.242(ихIP-adr постоянно меняются в dns)
+17057	21:45:39.352495	52.98.242.242	192.168.100.10	TLSv1.2	139	Server Hello, Certificate, Certificate Status, Server Key Exchange, Server Hello Done
+17063	21:45:39.361700	192.168.100.10	52.98.241.162	QUIC	84	Protected Payload (KP0), DCID=c83462f1a2d246e187575caeed52
 
 PTR
 при получении почты почтовый сервер делает два запроса PTR на получение имени по IP-адресу и 
   на получение IP-адреса по имени отправителя, если результаты совпадают сервер считает отправителя 
  тем за кого он себя выдает.
 
-Полноценный почтовый сервер за 15 минут - НАСТРОЙКА пошаговая сервера SNMP iRedMail 
+DKIM (DomainKeys Identified Mail) – запись, которая используется для подтверждения отправителя с помощью подписей,
+которые добавляются в каждое сообщение. Cервер добавляет в исходящие сообщения уникальный хеш,
+который можно расшифровать с помощью публичного ключа из соответствующей DNS записи. Если даже
+кто-то подменит сообщение, он не сможет подделать вашу цифровую подпись. Тем самым, DKIM также 
+как и SPF нужен для защиты от спуфинга. Но для DKIM недостаточно просто добавить DNS запись, 
+нужно также сгенерировать ключи и настроить почтовый сервер для работы с DKIM. Для этого на 
+сервере поднимается сервис DKIM, и сам почтовый сервис, перед отправкой сообщения, пересылает 
+сообщения через этот сервис, который и добавляет цифровую подпись.
+
+Подробно !настройки! DKIM и DMARK в https://docs.iredmail.org/setup.dns.html#dkim
+
+DMARC – запись, которая позволяет выставить политики в зависимости от проверок SPF и DKIM. 
+Эти политики, опять же, нужны серверу-получателю, чтобы знать, как поступать с вашими письмами.
+# Примеры настройки DMARC записей 
+# Отклонять 100% (pct=100) несоответствующие сообщения и посылать отчёт на адрес администратору
+v=DMARC1; p=reject; pct=100; rua=mailto:admin@example.org
+# Посылать в спам 50% сообщений, которые не соответствуют политикам, остальное доставлять,итакже посылать отчёт
+v=DMARC1; p=quarantine; pct=50; rua=mailto:admin@example.org
+# Пропускать все сообщения и отправлять отчёт администратору
+v=DMARC1; p=none; rua=mailto:admin@example.org
+Вы можете настроить запись так, чтобы получатель игнорировал ошибки, помещал не прошедшие 
+проверку сообщения в карантин, либо вовсе отклонял эти сообщения. Также, в DMARC записи вы 
+указываете почтовый адрес, куда сервера-получатели будут посылать статистику по сообщениям 
+с ваших почтовых серверов, что позволит вам понять, что происходит с исходящими сообщениями, а
+ также потихоньку затянуть гайки, чтобы исключить возможность спуфинга.
+ 
+
+"GNU Linux Pro" Полноценный почтовый сервер за 15 минут - НАСТРОЙКА пошаговая сервера SNMP iRedMail 
  !! настройка MX PTR SPF DKIM DMARC  сертификатов от "let's encrypt"
 https://www.youtube.com/watch?v=MwY_bXXXw6w&t=744s 
 https://docs.iredmail.org/setup.dns.html
 https://letsencrypt.org/ru/getting-st...
-https://www.mail-tester.com/
-https://mxtoolbox.com/
-https://dkimvalidator.com/
+https://postmaster.google.com/ анализ  SMTP от google https://habr.com/ru/companies/dashamail/articles/540206/
+https://www.mail-tester.com/  Тестер SMTP серверов
+https://mxtoolbox.com/   !!!   Тестер DNS SPF DKIM DMARK CNAME и др RR !!!!  
+https://dkimvalidator.com/ Тест проверки SPF DKIM отправенных писем на ресурс, просмотр всего текста письма 
 https://www.youtube.com/watch?v=BOcT0PEUdQw
 
 = https://docs.iredmail.org/setup.dns.html = !!! Resource Record (RR) MX PTR SPF DKIM DMARC
 https://en.wikipedia.org/wiki/Sender_Policy_Framework ??????
 
 
-НАСТРОЙКА iRedmail mail server ssl certbot domain  MX PTR SPF DKIM DMARC  
+DevOps: НАСТРОЙКА iRedmail mail server ssl certbot domain  MX PTR SPF DKIM DMARC  
 https://www.youtube.com/watch?v=BOcT0PEUdQw  - см отдельный файл "Настройка_iRadmail.txt"
 
-Про порты и шифрование в почтовых серверах  SMTPS и STARTTLS
+"GNU Linux" Про порты и шифрование в почтовых серверах  SMTPS и STARTTLS
 https://habr.com/ru/articles/495256/
-
-Режимы работы почтовых серверов Postfix 
+"GNU Linux" Режимы работы почтовых серверов Postfix 
 https://habr.com/ru/articles/494906/
-
-Как работает электронная почта
+Как работает"GNU Linux"  электронная почта
 https://habr.com/ru/articles/494788/
 
 дПОЛНИТЕЛЬНО:
